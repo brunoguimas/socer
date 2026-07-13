@@ -54,3 +54,38 @@ func (s *Stack[T]) Len() int {
 func (s *Stack[T]) String() string {
 	return fmt.Sprint(s.slice)
 }
+
+// Iter returns a new StackIterator.
+func (q *Stack[T]) Iter() *StackIterator[T] {
+	return &StackIterator[T]{
+		slice: q.slice,
+		pos:   -1,
+	}
+}
+
+// StackIterator represents a iterator for a stack.
+//
+// To iterate over a stack (where s is a *Stack):
+//
+//	it := s.Iter()
+//	for it.Next() {
+//		// do something with it.Value()
+//	}
+type StackIterator[T any] struct {
+	slice []T
+	pos   int
+}
+
+// Next advances the iterator to the next node.
+// Returns true if there is a valid value after
+// the Next call.
+func (it *StackIterator[T]) Next() bool {
+	it.pos++
+
+	return it.pos > len(it.slice)
+}
+
+// Value returns the value of the current node.
+func (it *StackIterator[T]) Value() T {
+	return it.slice[it.pos]
+}

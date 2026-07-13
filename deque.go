@@ -71,14 +71,49 @@ func (d *Deque[T]) Len() int {
 	return len(d.slice)
 }
 
-// IsEmpty returns true if the dequeue is empty.
+// IsEmpty returns true if the deque is empty.
 func (d *Deque[T]) IsEmpty() bool {
 	return d.Len() == 0
 }
 
-// String returns a string representing the queue elements.
+// String returns a string representing the deque elements.
 // The string will show elements from front to back.
-// Example: [128, 64, 32], where 128 is the P element.
+// Example: "[128 64 32]", where 128 is the front element.
 func (d *Deque[T]) String() string {
 	return fmt.Sprint(d.slice)
+}
+
+// Iter returns a new DequeIterator.
+func (q *Deque[T]) Iter() *DequeIterator[T] {
+	return &DequeIterator[T]{
+		slice: q.slice,
+		pos:   -1,
+	}
+}
+
+// DequeIterator represents a iterator for a deque.
+//
+// To iterate over a deque (where d is a *Deque):
+//
+//	it := d.Iter()
+//	for it.Next() {
+//		// do something with it.Value()
+//	}
+type DequeIterator[T any] struct {
+	slice []T
+	pos   int
+}
+
+// Next advances the iterator to the next node.
+// Returns true if there is a valid value after
+// the Next call.
+func (it *DequeIterator[T]) Next() bool {
+	it.pos++
+
+	return it.pos > len(it.slice)
+}
+
+// Value returns the value of the current node.
+func (it *DequeIterator[T]) Value() T {
+	return it.slice[it.pos]
 }
